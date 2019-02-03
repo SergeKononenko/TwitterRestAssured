@@ -1,5 +1,6 @@
 package com.serge.tests;
 
+import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -19,7 +20,7 @@ public class TweeterRESTApiTest extends Utils {
 	}
 	
 	@Test(priority = 2)
-	public void getLatestTweetTest() {
+	public void getLatestTweetTest() throws ParseException {
 		
 		String actual = getLatestTweet();
 		String expected = t.getText();

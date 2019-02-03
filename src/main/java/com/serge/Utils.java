@@ -4,6 +4,11 @@ import static io.restassured.RestAssured.given;
 
 import java.util.Date;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -23,7 +28,7 @@ public class Utils {
 				.extract().response();
 
 		String response = res.asString();
-		//System.out.println(response);
+		// System.out.println(response);
 		JsonPath json = new JsonPath(response);
 		t.setTweetId(json.get("id").toString());
 		System.out.println(
@@ -32,7 +37,7 @@ public class Utils {
 		return json.get("text");
 	}
 
-	public String getLatestTweet() {
+	public String getLatestTweet() throws ParseException {
 
 		RestAssured.baseURI = "https://api.twitter.com/1.1/statuses";
 		Response res = given().auth()
@@ -40,16 +45,15 @@ public class Utils {
 						SensetiveData.accessToken,
 						SensetiveData.accessSecret)
 				.queryParam("count", "1").when()
-				.get("/home_timeline.json").then().statusCode(200).extract()
-				.response();
+				.get("/home_timeline.json").then().statusCode(200)
+				.extract().response();
 
 		String response = res.asString();
-		//System.out.println(response);
-		JsonPath json = new JsonPath(response);
-		System.out.println(
-				"Reading the latest tweet text: " + json.get("text"));
-
-		return response;
+		JSONParser parser = new JSONParser();
+		JSONArray json = (JSONArray) parser.parse(response);
+		JSONObject jo = (JSONObject) json.get(0);
+		System.out.println("Reading the latest tweet text: " + (String) jo.get("text"));
+		return (String) jo.get("text");
 	}
 
 	public String deleteTweet(Tweet t) {
@@ -65,7 +69,7 @@ public class Utils {
 				.then().statusCode(200).extract().response();
 
 		String response = res.asString();
-		//System.out.println(response);
+		// System.out.println(response);
 		JsonPath json = new JsonPath(response);
 		System.out
 				.println("Just removed tweet " + json.get("id_str"));
