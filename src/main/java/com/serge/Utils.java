@@ -2,6 +2,8 @@ package com.serge;
 
 import static io.restassured.RestAssured.given;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,6 +15,9 @@ import io.restassured.response.Response;
 
 public class Utils {
 
+	public static Logger log = Logger.getLogger(Utils.class);
+	
+	
 	public static String createTweet(Tweet t) {
 
 		RestAssured.baseURI = "https://api.twitter.com/1.1/statuses";
@@ -28,8 +33,7 @@ public class Utils {
 		// System.out.println(response);
 		JsonPath json = new JsonPath(response);
 		t.setTweetId(json.get("id").toString());
-		System.out.println(
-				"Just created a tweet with id - " + t.getTweetId());
+		log.info("Just created a tweet with id - " + t.getTweetId());
 
 		return json.get("text");
 	}
@@ -49,7 +53,7 @@ public class Utils {
 		JSONParser parser = new JSONParser();
 		JSONArray json = (JSONArray) parser.parse(response);
 		JSONObject jo = (JSONObject) json.get(0);
-		System.out.println("Reading the latest tweet text: "
+		log.info("Reading the latest tweet text: "
 				+ (String) jo.get("text"));
 		return (String) jo.get("text");
 	}
@@ -69,8 +73,7 @@ public class Utils {
 		String response = res.asString();
 		// System.out.println(response);
 		JsonPath json = new JsonPath(response);
-		System.out
-				.println("Just removed tweet " + json.get("id_str"));
+		log.info("Just removed tweet " + json.get("id_str"));
 
 		return json.get("text");
 	}
