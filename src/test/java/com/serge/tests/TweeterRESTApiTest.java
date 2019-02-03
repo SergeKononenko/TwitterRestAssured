@@ -1,5 +1,6 @@
 package com.serge.tests;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.serge.Tweet;
@@ -9,25 +10,29 @@ public class TweeterRESTApiTest extends Utils {
 	
 	Tweet t = new Tweet("Test tweet from REST Assured API"); 
 	
-	@Test
+	@Test(priority = 1)
 	public void createTweetTest() {
 		
-		createTweet(t);
-		
+		String actual = createTweet(t);
+		String expected = t.getText();
+		Assert.assertTrue(actual.contains(expected));
 	}
 	
-	@Test
+	@Test(priority = 2)
 	public void getLatestTweetTest() {
 		
-		getLatestTweet();
+		String actual = getLatestTweet();
+		String expected = t.getText();
+		Assert.assertTrue(actual.contains(expected));
 		
 	}
 	
-	@Test
+	@Test(priority = 3)
 	public void deleteTweetTest() {
 		
-		deleteTweet(t);
-		
+		String actual = deleteTweet(t);
+		String expected = t.getText();
+		Assert.assertTrue(actual.contains(expected));
 	}
 	
 	

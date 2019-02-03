@@ -8,11 +8,9 @@ public class Tweet {
 	
 	public Tweet(String text) {
 		super();
-		
+		this.text = text;
 	}
-	
-	
-	
+		
 	public String getTweetId() {
 		return tweetId;
 	}
@@ -20,14 +18,9 @@ public class Tweet {
 	public void setTweetId(String tweetId) {
 		this.tweetId = tweetId;
 	}
+	
 	public String getText() {
 		return text;
 	}
-	public void setText(String text) {
-		this.text = text;
-	}
-	
-	
-
-	
+		
 }
