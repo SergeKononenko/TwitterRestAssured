@@ -2,8 +2,6 @@ package com.serge;
 
 import static io.restassured.RestAssured.given;
 
-import java.util.Date;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,10 +20,9 @@ public class Utils {
 				.oauth(SensetiveData.apiKey, SensetiveData.apiSecret,
 						SensetiveData.accessToken,
 						SensetiveData.accessSecret)
-				.queryParam("status",
-						t.getText() + " : " + new Date())
-				.when().post("/update.json").then().statusCode(200)
-				.extract().response();
+				.queryParam("status", t.getText()).when()
+				.post("/update.json").then().statusCode(200).extract()
+				.response();
 
 		String response = res.asString();
 		// System.out.println(response);
@@ -52,7 +49,8 @@ public class Utils {
 		JSONParser parser = new JSONParser();
 		JSONArray json = (JSONArray) parser.parse(response);
 		JSONObject jo = (JSONObject) json.get(0);
-		System.out.println("Reading the latest tweet text: " + (String) jo.get("text"));
+		System.out.println("Reading the latest tweet text: "
+				+ (String) jo.get("text"));
 		return (String) jo.get("text");
 	}
 

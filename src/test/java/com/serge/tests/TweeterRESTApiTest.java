@@ -1,5 +1,7 @@
 package com.serge.tests;
 
+import java.util.Date;
+
 import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -9,7 +11,7 @@ import com.serge.Utils;
 
 public class TweeterRESTApiTest extends Utils {
 	
-	Tweet t = new Tweet("Test tweet from REST Assured API"); 
+	Tweet t = new Tweet("Test tweet from REST Assured API: "  + new Date()); 
 	
 	@Test(priority = 1)
 	public void createTweetTest() {
