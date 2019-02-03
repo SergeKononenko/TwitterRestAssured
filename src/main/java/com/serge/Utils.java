@@ -1,20 +1,34 @@
-package com.serge.tests;
+package com.serge;
 
-import org.testng.annotations.Test;
+import static io.restassured.RestAssured.given;
 
-import com.serge.SensetiveData;
+import java.util.Date;
 
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
-import static io.restassured.RestAssured.*;
+public class Utils {
 
-import java.util.Date;
+	public static void createTweet(Tweet t) {
 
-public class Tweets {
+		RestAssured.baseURI = "https://api.twitter.com/1.1/statuses";
+		Response res = given().auth()
+				.oauth(SensetiveData.apiKey, SensetiveData.apiSecret,
+						SensetiveData.accessToken,
+						SensetiveData.accessSecret)
+				.queryParam("status", t.getText() + new Date()).when()
+				.post("/update.json").then().extract().response();
 
-	@Test(priority = 2)
+		String response = res.asString();
+		// System.out.println(response);
+		JsonPath json = new JsonPath(response);
+		t.setTweetId(json.get("id").toString());
+		System.out.println(
+				"Just created a tweet with id - " + t.getTweetId());
+
+	}
+
 	public void getLatestTweet() {
 
 		RestAssured.baseURI = "https://api.twitter.com/1.1/statuses";
@@ -34,31 +48,8 @@ public class Tweets {
 
 	}
 
-	@Test(priority = 1)
-	public void createTweet() {
+	public void deleteTweet(Tweet t) {
 
-		RestAssured.baseURI = "https://api.twitter.com/1.1/statuses";
-		Response res = given().auth()
-				.oauth(SensetiveData.apiKey, SensetiveData.apiSecret,
-						SensetiveData.accessToken,
-						SensetiveData.accessSecret)
-				.queryParam("status",
-						"Test post from RestAssured API123" + new Date().getTime())
-				.when().post("/update.json").then().extract()
-				.response();
-
-		String response = res.asString();
-		System.out.println(response);
-		JsonPath json = new JsonPath(response);
-		tweetId = json.get("id").toString();
-		System.out
-				.println("Just created a tweet with id - " + tweetId);
-
-	}
-
-	@Test(priority = 3)
-	public void deleteTweet() throws InterruptedException {
-		
 		RestAssured.baseURI = "https://api.twitter.com/1.1/statuses";
 		Response res = given().auth()
 				.oauth(SensetiveData.apiKey, SensetiveData.apiSecret,
@@ -66,16 +57,16 @@ public class Tweets {
 						SensetiveData.accessSecret)
 				.queryParam("status",
 						"Test post from RestAssured API")
-				.when().post("/destroy/" + tweetId + ".json").then()
+				.when().post("/destroy/" + t.getTweetId() + ".json").then()
 				.extract().response();
 
 		String response = res.asString();
 		// System.out.println(response);
 		JsonPath json = new JsonPath(response);
-		System.out.println("Just removed tweet " + json.get("id_str"));
+		System.out
+				.println("Just removed tweet " + json.get("id_str"));
 
 	}
 
-	private String tweetId;
-
+	
 }
